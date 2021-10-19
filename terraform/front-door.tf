@@ -27,8 +27,8 @@ resource "azurerm_frontdoor" "app" {
   backend_pool {
     name = "propt-app-backend"
     backend {
-      host_header = azurerm_storage_account.app.primary_web_endpoint
-      address     = azurerm_storage_account.app.primary_web_endpoint
+      host_header = azurerm_storage_account.app.primary_web_host
+      address     = azurerm_storage_account.app.primary_web_host
       http_port   = 80
       https_port  = 443
     }
