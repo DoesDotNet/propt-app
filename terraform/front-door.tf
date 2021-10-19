@@ -9,7 +9,7 @@ resource "azurerm_frontdoor" "app" {
     name               = "exampleRoutingRule1"
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
-    frontend_endpoints = ["propt-app"]
+    frontend_endpoints = [format("propt-app-%s-ukso-fd", var.environment)]
     forwarding_configuration {
       forwarding_protocol = "MatchRequest"
       backend_pool_name   = "propt-app-backend"
@@ -38,8 +38,8 @@ resource "azurerm_frontdoor" "app" {
   }
 
   frontend_endpoint {
-    name      = format("propt-app-%s-ukso-fd", var.environment)
-    host_name = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
+    name                     = format("propt-app-%s-ukso-fd", var.environment)
+    host_name                = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
     session_affinity_enabled = false
   }
 }
