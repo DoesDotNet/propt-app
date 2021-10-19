@@ -38,7 +38,8 @@ resource "azurerm_frontdoor" "app" {
   }
 
   frontend_endpoint {
-    name      = "propt-app"
-    host_name = "propt-app-test.azurefd.net"
+    name      = format("propt-app-%s-ukso-fd", var.environment)
+    host_name = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
+    session_affinity_enabled = false
   }
 }
