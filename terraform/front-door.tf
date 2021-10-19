@@ -20,7 +20,7 @@ resource "azurerm_frontdoor" "app" {
     name               = "app-route-https"
     accepted_protocols = ["Https"]
     patterns_to_match  = ["/*"]
-    frontend_endpoints = ["app-test"]
+    frontend_endpoints = ["app"]
     forwarding_configuration {
       forwarding_protocol = "MatchRequest"
       backend_pool_name   = "propt-app-backend"
