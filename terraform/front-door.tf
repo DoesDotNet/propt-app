@@ -61,7 +61,7 @@ resource "azurerm_frontdoor" "app" {
   }
 }
 
-resource "azurerm_frontdoor_custom_https_configuration" "app-https" {
-  frontend_endpoint_id              = azurerm_frontdoor.app.frontend_endpoint["app"]
+resource "azurerm_frontdoor_custom_https_configuration" "app" {
+  frontend_endpoint_id              = azurerm_frontdoor.app.frontend_endpoint[1]
   custom_https_provisioning_enabled = false
 }
