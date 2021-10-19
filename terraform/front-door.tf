@@ -16,6 +16,17 @@ resource "azurerm_frontdoor" "app" {
     }
   }
 
+  routing_rule {
+    name               = "app-route-https"
+    accepted_protocols = ["Https"]
+    patterns_to_match  = ["/*"]
+    frontend_endpoints = ["app-test"]
+    forwarding_configuration {
+      forwarding_protocol = "MatchRequest"
+      backend_pool_name   = "propt-app-backend"
+    }
+  }
+
   backend_pool_load_balancing {
     name = "propt-app-load-balancing"
   }
@@ -42,4 +53,15 @@ resource "azurerm_frontdoor" "app" {
     host_name                = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
     session_affinity_enabled = false
   }
+
+  frontend_endpoint {
+    name                     = "app"
+    host_name                = format("app-%s.propt.me", var.environment)
+    session_affinity_enabled = false
+  }
+}
+
+resource "azurerm_frontdoor_custom_https_configuration" "app-https" {
+  frontend_endpoint_id              = azurerm_frontdoor.app.frontend_endpoints["app"]
+  custom_https_provisioning_enabled = false
 }
