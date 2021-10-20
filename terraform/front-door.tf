@@ -1,19 +1,20 @@
 resource "azurerm_frontdoor" "app" {
-  name                                         = format("propt-app-%s-ukso-fd", var.environment)
+  name                                         = local.frontdoor_name
   resource_group_name                          = azurerm_resource_group.app.name
   enforce_backend_pools_certificate_name_check = false
 
   tags = local.common_tags
 
-  routing_rule {
-    name               = "exampleRoutingRule1"
-    accepted_protocols = ["Http", "Https"]
-    patterns_to_match  = ["/*"]
-    frontend_endpoints = [format("propt-app-%s-ukso-fd", var.environment)]
-    forwarding_configuration {
-      forwarding_protocol = "MatchRequest"
-      backend_pool_name   = "propt-app-backend"
-    }
+  frontend_endpoint {
+    name                     = local.frontdoor_name
+    host_name                = local.frontdoor_hostname
+    session_affinity_enabled = false
+  }
+
+  frontend_endpoint {
+    name                     = "app"
+    host_name                = format("app-%s.propt.me", var.environment)
+    session_affinity_enabled = false
   }
 
   routing_rule {
@@ -24,6 +25,17 @@ resource "azurerm_frontdoor" "app" {
     forwarding_configuration {
       forwarding_protocol = "MatchRequest"
       backend_pool_name   = "propt-app-backend"
+    }
+  }
+
+  routing_rule {
+    name               = "app-route-http"
+    accepted_protocols = ["Http"]
+    patterns_to_match  = ["/*"]
+    frontend_endpoints = ["app"]
+    redirect_configuration {
+      redirect_protocol = "HttpOnly"
+      redirect_type = "PermanentRedirect"
     }
   }
 
@@ -48,17 +60,7 @@ resource "azurerm_frontdoor" "app" {
     health_probe_name   = "propt-app-health-probe"
   }
 
-  frontend_endpoint {
-    name                     = format("propt-app-%s-ukso-fd", var.environment)
-    host_name                = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
-    session_affinity_enabled = false
-  }
-
-  frontend_endpoint {
-    name                     = "app"
-    host_name                = format("app-%s.propt.me", var.environment)
-    session_affinity_enabled = false
-  }
+  
 }
 
 resource "azurerm_frontdoor_custom_https_configuration" "app" {
