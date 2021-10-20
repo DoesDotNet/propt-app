@@ -13,7 +13,7 @@ resource "azurerm_frontdoor" "app" {
 
   frontend_endpoint {
     name                     = "app"
-    host_name                = format("app-%s.propt.me", var.environment)
+    host_name                = local.frontdoor_app_host
     session_affinity_enabled = false
   }
 
@@ -35,7 +35,7 @@ resource "azurerm_frontdoor" "app" {
     frontend_endpoints = ["app"]
     redirect_configuration {
       redirect_protocol = "HttpOnly"
-      redirect_type = "PermanentRedirect"
+      redirect_type     = "PermanentRedirect"
     }
   }
 
@@ -44,7 +44,8 @@ resource "azurerm_frontdoor" "app" {
   }
 
   backend_pool_health_probe {
-    name = "propt-app-health-probe"
+    name     = "propt-app-health-probe"
+    protocol = "Https"
   }
 
   backend_pool {
@@ -59,11 +60,13 @@ resource "azurerm_frontdoor" "app" {
     load_balancing_name = "propt-app-load-balancing"
     health_probe_name   = "propt-app-health-probe"
   }
-
-  
 }
 
 resource "azurerm_frontdoor_custom_https_configuration" "app" {
   frontend_endpoint_id              = azurerm_frontdoor.app.frontend_endpoint[0].id
-  custom_https_provisioning_enabled = false
+  custom_https_provisioning_enabled = true
+
+  custom_https_configuration {
+    certificate_source = "FrontDoor"
+  }
 }

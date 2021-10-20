@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "app" {
-  name                     = format("proptapp%suksosa", var.environment)
+  name                     = format("%s%s%suksosa", var.project, var.system, var.environment)
   resource_group_name      = azurerm_resource_group.app.name
   location                 = azurerm_resource_group.app.location
   account_tier             = "Standard"

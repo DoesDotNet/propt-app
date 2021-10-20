@@ -5,6 +5,8 @@ locals {
     system      = "${var.system}"
   }
 
-  frontdoor_name = format("propt-app-%s-ukso-fd", var.environment)
-  frontdoor_hostname = format("propt-app-%s-ukso-fd.azurefd.net", var.environment)
+  frontdoor_name     = format("%s-%s-%s-ukso-fd", var.project, var.system, var.environment)
+  frontdoor_hostname = format("%s-%s-%s-ukso-fd.azurefd.net", var.project, var.system, var.environment)
+
+  frontdoor_app_host = var.environment == "live" ? "app.propt.me" : format("app-%s.propt.me", var.environment)
 }
