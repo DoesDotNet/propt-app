@@ -48,6 +48,36 @@ jobs:
         id: Apply
         run: terraform apply -no-color -auto-approve -input=false tfplan
 
+  deploy-test:
+    name: 'Deploy - Test'
+    runs-on: 'ubuntu-latest'
+    environment: test
+    needs: terraform-test
+
+    steps:
+      - uses: Azure/login@v1.1
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_AD_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_AD_TENANT_ID }}"}'
+      
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+              az storage blob upload-batch --account-name <STORAGE_ACCOUNT_NAME>  --auth-mode key -d '$web' -s .
+
+      - name: Purge CDN endpoint
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az network front-door purge-endpoint --content-paths  "/*" --name "CDN_ENDPOINT" --resource-group "RESOURCE_GROUP"
+
+      - name: logout
+        run: |
+              az logout
+        if: always()
+    
 
   terraform-live:
     name: 'Terraform - Live'
