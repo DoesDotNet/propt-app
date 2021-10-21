@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "app" {
-  name                     = format("%ssaukso", local.name_prefix)
+  name                     = format("%ssaukso", local.storage_name_prefix)
   resource_group_name      = azurerm_resource_group.app.name
   location                 = azurerm_resource_group.app.location
   account_tier             = "Standard"
@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "app" {
   enable_https_traffic_only = true
 
   static_website {
-    index_document = "index.html"
+    index_document     = "index.html"
     error_404_document = "404.html"
   }
 
