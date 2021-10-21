@@ -1,4 +1,4 @@
 resource "azurerm_resource_group" "app" {
-  name     = format("propt-app-%s-ukso-rg", var.environment)
+  name     = format("%s-rg-ukso", local.name_prefix)
   location = "UK South"
 }

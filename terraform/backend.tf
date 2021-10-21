@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "propt-tf-test-ukso-rg"
-    storage_account_name = "propttftestuksosa"
+    resource_group_name  = "propt-tf-test-rg-ukso"
+    storage_account_name = "propttftestsaukso"
     container_name       = "terraformstate"
     key                  = "propt-app.tfstate"
   }
