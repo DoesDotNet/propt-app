@@ -7,6 +7,22 @@ on:
   workflow_dispatch:
     
 jobs:
+  build-test:
+    name: 'Build and Test'
+    runs-on: 'ubuntu-latest'
+    environment: test
+
+    steps:
+      - name: Setup Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      
+      - name: 'Build and Test'
+        run: |
+          npm build
+          npm test
+
   terraform-test:
     name: 'Terraform - Test'
     runs-on: 'ubuntu-latest'
@@ -47,7 +63,6 @@ jobs:
       - name: Terraform Apply
         id: Apply
         run: terraform apply -no-color -auto-approve -input=false tfplan
-
 
   terraform-live:
     name: 'Terraform - Live'
