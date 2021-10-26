@@ -92,23 +92,6 @@ jobs:
           STORAGE_NAME=$(terraform output storage_name)
           echo $STORAGE_NAME
 
-      # - name: 'Terraform Output'
-      #   id: terraform_outputs
-      #   uses: hashicorp/terraform-github-actions@master
-      #   with:
-      #     tf_actions_version: latest
-      #     tf_actions_subcommand: 'output'
-      #     tf_actions_working_dir: '.'
-
-      # - name: 'Use Terraform Output'
-      #   run: echo ${{ steps.terraform_outputs.outputs.tf_actions_output }}
-
-      # - name: 'Pull storage name from TF outputs'
-      #   run: |
-      #     apt-get install jq
-      #     STORAGE_NAME=$(echo ${{ steps.terraform_outputs.outputs.tf_actions_output }} | jq -r '.storage_name.value.name')
-      #     echo $STORAGE_NAME
-
   deploy-test:
     name: 'Deploy - Test'
     runs-on: 'ubuntu-latest'
@@ -140,7 +123,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name ${{ env.STORAGE_NAME }} -s ./dist/propt -d '$web' --auth-mode key
+            az storage blob upload-batch --account-name proptapptestsaukso -s ./dist/propt -d '$web' --auth-mode key
 
   terraform-live:
     name: 'Terraform - Live'
