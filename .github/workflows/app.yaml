@@ -20,8 +20,8 @@ jobs:
       
       - name: 'Build and Test'
         run: |
-          npm build
-          npm test
+          npm run build
+          npm run test
 
   terraform-test:
     name: 'Terraform - Test'
@@ -68,7 +68,7 @@ jobs:
     name: 'Terraform - Live'
     runs-on: 'ubuntu-latest'
     environment: live
-    needs: terraform-test
+    needs: [terraform-test, build-test]
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
