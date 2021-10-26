@@ -111,7 +111,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name proptapptestsaukso -s ./dist/propt -d $web --auth-mode key
+            az storage blob upload-batch --account-name proptapptestsaukso -s ./dist/propt -d '$web' --auth-mode key
 
   terraform-live:
     name: 'Terraform - Live'
