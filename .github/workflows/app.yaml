@@ -23,8 +23,7 @@ jobs:
       - name: 'Build and Test'
         run: |
           npm ci
-          npm run build
-          npm run test
+          npm run build:ci
 
   terraform-test:
     name: 'Terraform - Test'
