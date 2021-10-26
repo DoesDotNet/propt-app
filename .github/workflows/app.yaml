@@ -154,3 +154,36 @@ jobs:
       - name: Terraform Apply
         id: Apply
         run: terraform apply -no-color -auto-approve -input=false tfplan
+
+  deploy-live:
+    name: 'Deploy - Live'
+    runs-on: 'ubuntu-latest'
+    environment: live
+    needs: terraform-live
+
+    steps:
+      - name: 'Cache Dist'
+        id: get-dist-cache
+        uses: actions/cache@v2
+        with:
+          path: ./dist/propt
+          key: build-dist-${{ github.run_id }}
+
+      - name: 'Check cache exists'
+        if: ${{ steps.get-dist-cache.outputs.cache-hit == 'false' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Dist cache not found')
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_AD_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_AD_TENANT_ID }}"}'
+
+      - name: Upload to Blob Storage
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob upload-batch --account-name proptapplivesaukso -s ./dist/propt -d '$web' --auth-mode key
