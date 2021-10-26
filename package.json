@@ -2,6 +2,7 @@
   "name": "propt",
   "version": "0.0.0",
   "scripts": {
+    "clean": "rimraf ./dist",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
