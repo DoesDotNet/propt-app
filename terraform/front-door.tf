@@ -34,7 +34,7 @@ resource "azurerm_frontdoor" "app" {
     patterns_to_match  = ["/*"]
     frontend_endpoints = ["app"]
     redirect_configuration {
-      redirect_protocol = "HttpOnly"
+      redirect_protocol = "HttpsOnly"
       redirect_type     = "PermanentRedirect"
     }
   }
